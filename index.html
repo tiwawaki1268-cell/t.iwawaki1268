@@ -18,8 +18,8 @@
 <h2>メンバー登録フォーム</h2>
 
 <div id="formArea">
-  <label>氏名：<input type="text" id="name"></label>
-  <label>年齢：<input type="number" id="age"></label>
+  <label>姓：<input type="text" id="lastName"></label>
+  <label>名：<input type="text" id="firstName"></label>
   <label>生年月日：<input type="date" id="birthday"></label>
   <label>性別：
     <select id="gender">
@@ -49,24 +49,24 @@
   }
 
   function clearForm() {
-    document.getElementById("name").value = "";
-    document.getElementById("age").value = "";
+    document.getElementById("lastName").value = "";
+    document.getElementById("firstName").value = "";
     document.getElementById("birthday").value = "";
     document.getElementById("gender").value = "";
   }
 
   document.getElementById("registerBtn").onclick = function() {
-    const name = document.getElementById("name").value;
-    const age = document.getElementById("age").value;
+    const lastName = document.getElementById("lastName").value;
+    const firstName = document.getElementById("firstName").value;
     const birthday = document.getElementById("birthday").value;
     const gender = document.getElementById("gender").value;
 
-    if (!name || !age || !birthday || !gender) {
+    if (!lastName || !firstName || !birthday || !gender) {
       alert("すべて入力してください");
       return;
     }
 
-    members.push({ name, age, birthday, gender });
+    members.push({ lastName, firstName, birthday, gender });
     saveMembers();
     clearForm();
 
@@ -82,12 +82,11 @@
 
   document.getElementById("showListBtn").onclick = function() {
     let html = "<h3>登録メンバー一覧</h3>";
-    html += "<table><tr><th>氏名</th><th>年齢</th><th>生年月日</th><th>性別</th></tr>";
+    html += "<table><tr><th>氏名</th><th>生年月日</th><th>性別</th></tr>";
 
     members.forEach(m => {
       html += `<tr>
-        <td>${m.name}</td>
-        <td>${m.age}</td>
+        <td>${m.lastName} ${m.firstName}</td>
         <td>${m.birthday}</td>
         <td>${m.gender}</td>
       </tr>`;
