@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>メンバー登録フォーム</title>
+<style>
+  body { font-family: sans-serif; margin: 20px; }
+  label { display: block; margin-top: 10px; }
+  input, select { width: 200px; padding: 5px; }
+  button { margin-top: 15px; padding: 8px 15px; }
+  #listArea { margin-top: 30px; }
+  table { border-collapse: collapse; margin-top: 10px; }
+  th, td { border: 1px solid #666; padding: 5px 10px; }
+</style>
+</head>
+<body>
+
+<h2>メンバー登録フォーム</h2>
+
+<div id="formArea">
+  <label>氏名：<input type="text" id="name"></label>
+  <label>年齢：<input type="number" id="age"></label>
+  <label>生年月日：<input type="date" id="birthday"></label>
+  <label>性別：
+    <select id="gender">
+      <option value="">選択してください</option>
+      <option value="男性">男性</option>
+      <option value="女性">女性</option>
+      <option value="その他">その他</option>
+    </select>
+  </label>
+
+  <button id="registerBtn">登録</button>
+  <button id="finishBtn" style="display:none;">終了</button>
+</div>
+
+<hr>
+
+<button id="showListBtn">一覧表示</button>
+<button id="clearBtn">クリア</button>
+
+<div id="listArea"></div>
+
+<script>
+  let members = JSON.parse(localStorage.getItem("members") || "[]");
+
+  function saveMembers() {
+    localStorage.setItem("members", JSON.stringify(members));
+  }
+
+  function clearForm() {
+    document.getElementById("name").value = "";
+    document.getElementById("age").value = "";
+    document.getElementById("birthday").value = "";
+    document.getElementById("gender").value = "";
+  }
+
+  document.getElementById("registerBtn").onclick = function() {
+    const name = document.getElementById("name").value;
+    const age = document.getElementById("age").value;
+    const birthday = document.getElementById("birthday").value;
+    const gender = document.getElementById("gender").value;
+
+    if (!name || !age || !birthday || !gender) {
+      alert("すべて入力してください");
+      return;
+    }
+
+    members.push({ name, age, birthday, gender });
+    saveMembers();
+    clearForm();
+
+    if (members.length >= 10) {
+      document.getElementById("registerBtn").style.display = "none";
+      document.getElementById("finishBtn").style.display = "inline-block";
+    }
+  };
+
+  document.getElementById("finishBtn").onclick = function() {
+    alert("登録を終了しました");
+  };
+
+  document.getElementById("showListBtn").onclick = function() {
+    let html = "<h3>登録メンバー一覧</h3>";
+    html += "<table><tr><th>氏名</th><th>年齢</th><th>生年月日</th><th>性別</th></tr>";
+
+    members.forEach(m => {
+      html += `<tr>
+        <td>${m.name}</td>
+        <td>${m.age}</td>
+        <td>${m.birthday}</td>
+        <td>${m.gender}</td>
+      </tr>`;
+    });
+
+    html += "</table>";
+    document.getElementById("listArea").innerHTML = html;
+  };
+
+  document.getElementById("clearBtn").onclick = function() {
+    if (confirm("データをすべて削除しますか？")) {
+      members = [];
+      saveMembers();
+      document.getElementById("listArea").innerHTML = "";
+      document.getElementById("registerBtn").style.display = "inline-block";
+      document.getElementById("finishBtn").style.display = "none";
+      alert("削除しました");
+    }
+  };
+</script>
+
+</body>
+</html>
